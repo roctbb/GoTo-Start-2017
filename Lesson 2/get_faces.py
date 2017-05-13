@@ -15,7 +15,9 @@ result = requests.post(url, data=image_data, headers=headers)
 
 faces_list = result.json()
 
-im = Image.open("faces.jpg")
+im = Image.open("faces.jpg").convert("RGBA")
+
+print(faces_list)
 
 for face in faces_list:
     coords = face["faceRectangle"]
@@ -35,8 +37,8 @@ for face in faces_list:
 
     box = (x1, y1, x2, y2)
     face_image = im.crop(box)
-    face_image = face_image.transpose(Image.ROTATE_180)
+    face_image = face_image.rotate(45)
 
-    im.paste(face_image, box)
+    im.paste(face_image, box, face_image)
 
 im.show()
