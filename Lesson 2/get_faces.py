@@ -1,4 +1,5 @@
 import requests
+from PIL import Image
 
 file = open('faces.jpg', 'rb')
 image_data = file.read()
@@ -14,6 +15,8 @@ result = requests.post(url, data=image_data, headers=headers)
 
 faces_list = result.json()
 
+im = Image.open("faces.jpg")
+
 for face in faces_list:
     coords = face["faceRectangle"]
 
@@ -23,3 +26,17 @@ for face in faces_list:
     print("x: {0}".format(coords['left']))
     print("y: {0}".format(coords['top']))
     print("\n")
+
+    x1 = coords['left']
+    y1 = coords['top']
+
+    x2 = x1 + coords['width']
+    y2 = y1 + coords['height']
+
+    box = (x1, y1, x2, y2)
+    face_image = im.crop(box)
+    face_image = face_image.transpose(Image.ROTATE_180)
+
+    im.paste(face_image, box)
+
+im.show()
