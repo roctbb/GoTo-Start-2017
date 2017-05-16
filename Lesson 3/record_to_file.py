@@ -1,4 +1,4 @@
-import pyaudio
+import pyaudio, wave
 
 FORMAT = pyaudio.paInt16  # глубина звука = 16 бит = 2 байта
 CHANNELS = 1  # моно
@@ -13,11 +13,8 @@ audio = pyaudio.PyAudio()
 # и задаем параметры
 stream = audio.open(format=FORMAT, channels=CHANNELS,
                     rate=RATE, input=True,
-                    frames_per_buffer=CHUNK)
+                    frames_per_buffer=CHUNfK)
 
-# открываем поток для записи на устройство вывода - динамик - с такими же параметрами
-out_stream = audio.open(format=FORMAT, channels=CHANNELS,
-                        rate=RATE, output=True)
 print("recording...")
 
 chunks = []  # список байтовых строк
@@ -26,12 +23,19 @@ chunks = []  # список байтовых строк
 for i in range(0, RATE // CHUNK * RECORD_SECONDS):  # RATE // CHUNK - кол-во запросов в секунду
     data = stream.read(CHUNK)  # читаем строку из байт длиной CHUNK * FORMAT = 4000*2 байт
     chunks.append(data)  # добавляем строку в список
+
 print("finished recording")
-
-full_wave = b''.join(frames)  # склеиваем строки в одну
-
-out_stream.write(full_wave)  # отправляем на динамик
 
 stream.stop_stream()
 stream.close()
 audio.terminate()
+
+full_wave = b''.join(frames)  # склеиваем байт-строки в одну
+
+# записываем в файл
+waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+waveFile.setnchannels(CHANNELS)
+waveFile.setsampwidth(audio.get_sample_size(FORMAT))
+waveFile.setframerate(RATE)
+waveFile.writeframes(full_wave)  # записываем
+waveFile.close()

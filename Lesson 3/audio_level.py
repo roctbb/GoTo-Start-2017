@@ -1,22 +1,33 @@
-import pyaudio, struct
+import struct, pyaudio
 
-FRAMERATE = 44100
-BUFFER = 4096
-
-result = b""
+FORMAT = pyaudio.paInt16  # глубина звука = 16 бит = 2 байта
+CHANNELS = 1  # моно
+RATE = 48000  # частота дискретизации - кол-во фреймов в секунду
+CHUNK = 4000  # кол-во фреймов за один "запрос" к микрофону - тк читаем по кусочкам
+RECORD_SECONDS = 20  # длительность записи
 
 audio = pyaudio.PyAudio()
-in_stream = audio.open(format=pyaudio.paInt16, channels=1,
-                       rate=FRAMERATE, input=True, frames_per_buffer=BUFFER)
-seconds = 5
 
-while True:
-    s = 0
-    k = 0
-    for i in range(int(0.1 * FRAMERATE / BUFFER)):
-        data = in_stream.read(BUFFER)
-        frames = struct.unpack("<{0}h".format(len(data) // 2), data)
+# открываем поток для чтения данных с устройства записи по умолчанию
+# и задаем параметры
+stream = audio.open(format=FORMAT, channels=CHANNELS,
+                    rate=RATE, input=True,
+                    frames_per_buffer=CHUNK)
+print("recording...")
+
+# каждую секунду
+for i in range(RECORD_SECONDS):
+    s = 0  # сумма отсчетов за секунду
+
+    # для каждого "запроса"
+    for j in range(RATE // CHUNK):  # RATE//CHUNK - количество "запросов" к микрофону в секунду
+        data = stream.read(CHUNK)  # читаем строку из байт длиной CHUNK * FORMAT = 4000*2 байт
+        frames = struct.unpack("<" + str(CHUNK) + "h", data)  # строка -> список из CHUNK отсчетов, h - это short int
+
+        # суммируем модули отсчетов - они могут быть отрицптельными
         for frame in frames:
             s += abs(frame)
-        k += len(frames)
-    print(s // k)
+
+    print(s // RATE)  # выводим среднюю громкость секунды
+
+print("finished recording")
