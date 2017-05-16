@@ -12,7 +12,6 @@ headers = {
 url = "https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize"
 
 result = requests.post(url, data=image_data, headers=headers)
-
 faces_list = result.json()
 
 im = Image.open("faces.jpg").convert("RGBA")
@@ -21,6 +20,9 @@ print(faces_list)
 
 for face in faces_list:
     coords = face["faceRectangle"]
+    emotions = face["scores"]
+
+
 
     print("face:")
     print("width: {0}".format(coords['width']))
