@@ -1,10 +1,6 @@
 import pyaudio, wave
 
-FORMAT = pyaudio.paInt16  # глубина звука = 16 бит = 2 байта
-CHANNELS = 1  # моно
-RATE = 48000  # частота дискретизации - кол-во фреймов в секунду
-CHUNK = 4000  # кол-во фреймов за один "запрос" к микрофону - тк читаем по кусочкам
-RECORD_SECONDS = 5  # длительность записи
+z
 WAVE_OUTPUT_FILENAME = "file.wav"
 
 audio = pyaudio.PyAudio()
