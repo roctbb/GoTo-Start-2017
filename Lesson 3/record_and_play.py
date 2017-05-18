@@ -28,7 +28,7 @@ for i in range(0, RATE // CHUNK * RECORD_SECONDS):  # RATE // CHUNK - кол-в�
     chunks.append(data)  # добавляем строку в список
 print("finished recording")
 
-full_wave = b''.join(frames)  # склеиваем строки в одну
+full_wave = b''.join(chunks)  # склеиваем строки в одну
 
 out_stream.write(full_wave)  # отправляем на динамик
 

@@ -13,7 +13,7 @@ audio = pyaudio.PyAudio()
 # и задаем параметры
 stream = audio.open(format=FORMAT, channels=CHANNELS,
                     rate=RATE, input=True,
-                    frames_per_buffer=CHUNfK)
+                    frames_per_buffer=CHUNK)
 
 print("recording...")
 
@@ -30,7 +30,7 @@ stream.stop_stream()
 stream.close()
 audio.terminate()
 
-full_wave = b''.join(frames)  # склеиваем байт-строки в одну
+full_wave = b''.join(chunks)  # склеиваем байт-строки в одну
 
 # записываем в файл
 waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
