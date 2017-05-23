@@ -15,7 +15,6 @@ def start_spam(message):
 
 @bot.message_handler(commands=["spam"])
 def start_spam(message):
-    global users
     users.add(message.chat.id)
     bot.send_message(message.chat.id, "Берем сироп вишневый")
 
