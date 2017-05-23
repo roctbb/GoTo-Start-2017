@@ -1,3 +1,5 @@
+from threading import Thread
+
 import telebot
 from time import sleep
 
@@ -7,24 +9,35 @@ bot = telebot.TeleBot(token)
 
 users = set()
 
-@bot.message_handler(content_types=["start"])
+@bot.message_handler(commands=["start"])
 def start_spam(message):
     bot.send_message(message.chat.id, "https://www.youtube.com/watch?v=rdg4lkgsQ04")
 
-@bot.message_handler(content_types=["spam"])
+@bot.message_handler(commands=["spam"])
 def start_spam(message):
+    global users
     users.add(message.chat.id)
     bot.send_message(message.chat.id, "Берем сироп вишневый")
 
-@bot.message_handler(content_types=["stop"])
+@bot.message_handler(commands=["stop"])
 def start_spam(message):
     users.remove(message.chat.id)
     bot.send_message(message.chat.id, "Ок, все.")
 
-while True:
-    for user in users:
-        bot.send_message(user, "Затем сироп вишневый!")
-    bot.polling()
-    sleep(3)
+
+def update_messages():
+    bot.polling(none_stop=True)
+
+def send_spam():
+    while True:
+        for user in users:
+            bot.send_message(user, "Затем сироп вишневый!")
+        sleep(3)
+
+polling = Thread(target=update_messages)
+spamming = Thread(target=send_spam)
+
+polling.start()
+spamming.start()
 
 
