@@ -55,5 +55,16 @@
 
 **ДЗ: Бот для обработки фотографий или собственная идея.**
 
+## Занятие 7: Веб-сервер Tornado
+
+1. Общая схема работы по HTTP - [https://habrahabr.ru/post/215117/](https://habrahabr.ru/post/215117/).
+2. Язык разметки HTML:
+  - [самоучитель htmlbook.ru](http://htmlbook.ru/samhtml)
+  - [Интерактивный курс по HTML/CSS](https://htmlacademy.ru/)
+  - [HTML фреймфорк Bootstrap](http://getbootstrap.com)
+3. Веб-сервер Tornado:
+  - [Документация](http://www.tornadoweb.org/en/stable/)
+
+**ДЗ: Написать сайт с тестом или случайной историей, которые зависят от введенных пользователем данных.**
 
 
