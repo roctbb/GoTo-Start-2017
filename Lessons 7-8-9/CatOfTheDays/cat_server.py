@@ -3,6 +3,12 @@ import random
 import tornado.ioloop
 import tornado.web
 import json
+from pymongo import MongoClient
+
+connection = MongoClient("mongodb://user:password@ds155191.mlab.com:55191/goto_cats")
+database = connection['goto_cats']
+cats_collection = database['cats']
+
 
 class CommentHandler(tornado.web.RequestHandler):
     def post(self):
@@ -10,20 +16,13 @@ class CommentHandler(tornado.web.RequestHandler):
         text = self.get_argument("text", "")
         cat_id = int(self.get_argument("cat_id"))
 
-        if email!="" and text!="":
+        if email != "" and text != "":
+            comment = {"email": email, "text": text}
 
-            comment = {"email": email, "text": text, "cat_id": cat_id}
+            cat = cats_collection.find_one({"id": cat_id})
+            cat['comments'].append(comment)
 
-            with open("comments.txt", "r") as file:
-                content = file.read()
-
-            comments = json.loads(content)
-            comments.append(comment)
-
-            content = json.dumps(comments)
-
-            with open("comments.txt", "w") as file:
-                file.write(content)
+            cats_collection.update({"id": cat_id}, cat)
 
         self.redirect('/?id={0}'.format(cat_id))
 
@@ -33,29 +32,15 @@ class MainHandler(tornado.web.RequestHandler):
 
         id = int(self.get_argument("id", -1))
 
-        with open("comments.txt", "r") as file:
-            content = file.read()
-        all_comments = json.loads(content)
-
-        cats = [
-            {"name": "Бывалый", "image": "images/1.jpg", "id": 1},
-            {"name": "Красавица", "image": "images/2.jpg", "id": 2},
-            {"name": "243", "image": "images/3.jpg", "id": 3},
-            {"name": "Янезнаю", "image": "images/4.jpg", "id": 4},
-            {"name": "Мурзик", "image": "images/5.jpg", "id": 5},
-        ]
+        cats = list(cats_collection.find())
         random_cat = random.choice(cats)
         if id != -1:
             for cat in cats:
                 if cat['id'] == id:
                     random_cat = cat
 
-        comments = []
-        for comment in all_comments:
-            if comment['cat_id'] == random_cat['id']:
-                comments.append(comment)
+        self.render('cat.html', cat=random_cat)
 
-        self.render('cat.html', cat=random_cat, comments=comments)
 
 routes = [
     (r"/", MainHandler),
