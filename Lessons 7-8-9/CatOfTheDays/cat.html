@@ -115,6 +115,40 @@
         <img src="{{cat['image']}}" style="width:70%;"/>
     </div>
 
+    {% for comment in comments %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <p>
+                <strong>Email:</strong>
+                {{comment['email']}}
+            </p>
+            <p>
+                <strong>Комментарий:</strong>
+                {{comment['text']}}
+            </p>
+        </div>
+    </div>
+    {% end %}
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form action="/add_comment" method="POST">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">E-mail</label>
+                    <input type="email" class="form-control" name="email" id="exampleInputEmail1" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <label>Комментарий</label>
+                    <textarea class="form-control" name="text" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success" value="Оставить хайповый комментарий"/>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
 
     <footer class="footer">
         <p>&copy; 2016 Company, Inc.</p>
