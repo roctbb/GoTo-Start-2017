@@ -3,6 +3,8 @@ import vk
 
 token = "959baace8aefa7c8278304ad2d96da52cf98140773f24cca290d157288ae662e3b3375f14d26b1fa75450"
 
+
+
 session = vk.Session(access_token=token)
 api = vk.API(session)
 last_message_id = 0
