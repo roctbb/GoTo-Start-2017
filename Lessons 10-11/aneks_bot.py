@@ -25,7 +25,7 @@ while True:
         if text!='':
             result = api2.wall.search(domain="kinopoisk", count=100, query=text, v=5.65)
             if result["count"]!=0:
-                anek_text = random.choice(result["items"])["text"]
+                anek_text = random.choice(result["items"][0])["text"]
                 api.messages.send(user_id=message['user_id'], message=anek_text)
 
 
